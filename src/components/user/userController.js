@@ -3,7 +3,8 @@ const userService = require("./userService");
 // TODO: Logic
 exports.getAllUsers = async (req, res) => {
   try {
-    return await res.status(200).json({ message: "Get all users" });
+    const registeredActivatedUsers = await userService.getAllUsers();
+    return await res.status(200).json({ data: registeredActivatedUsers });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

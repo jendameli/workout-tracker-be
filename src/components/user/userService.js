@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const { where } = require("sequelize");
 
 const User = require("./userModel");
 
@@ -25,9 +26,18 @@ exports.checkInputEmail = (userEmail) => {
 };
 
 // Main services for user resource
-// TODO: Logic
+// TODO: Return only activated accounts
 exports.getAllUsers = async () => {
-  return;
+  return await User.findAll({
+    attributes: [
+      "userId",
+      "firstName",
+      "lastName",
+      "age",
+      "email",
+      "createdAt",
+    ],
+  });
 };
 // TODO: Logic
 exports.getUserById = async () => {
