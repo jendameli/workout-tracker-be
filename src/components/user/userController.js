@@ -9,6 +9,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Endpoint to get user by provided userId(Pk) via params
 exports.getUserById = async (req, res) => {
   const { userId } = req.params;
   if (!userId) {
@@ -49,6 +50,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+// Endpoint to confirm user account via email with unique hash.
 exports.confirmUserAccount = async (req, res) => {
   const { registrationHash } = req.params;
   try {

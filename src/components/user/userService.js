@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const { where } = require("sequelize");
 const {
   sendRegistrationEmail,
 } = require("../../utils/emailProvider/emailProvider");
@@ -22,27 +21,34 @@ const comparePasswords = (enteredPassword) => {
   // TODO: Logic for compare passwords, boolean
 };
 
-// Check if user provided email is email
+// Check if user provided email is type of email
 exports.checkInputEmail = (userEmail) => {
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return userEmail.match(emailRegex);
 };
 
 // Main services for user resource
-// TODO: Return only activated accounts
+
 exports.getAllUsers = async () => {
-  return await User.findAll({
-    attributes: [
-      "userId",
-      "firstName",
-      "lastName",
-      "age",
-      "email",
-      "createdAt",
-    ],
-  });
+  try {
+    return await User.findAll(
+      {
+        attributes: [
+          "userId",
+          "firstName",
+          "lastName",
+          "age",
+          "email",
+          "createdAt",
+        ],
+        where: { isActivated: true },
+      }
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
-// TODO: Logic
+
 exports.getUserById = async (userId) => {
   try {
     return await User.findByPk(userId, {
@@ -56,6 +62,7 @@ exports.getUserById = async (userId) => {
 exports.registerUser = async (userData) => {
   const hashedPassword = hashPassword(userData.password);
   const registrationLink = createRandomString();
+
   const userRegistration = Object.assign(userData, {
     password: hashedPassword,
     registrationHash: registrationLink,
