@@ -1,4 +1,4 @@
-const http = require("http2");
+const http = require("http");
 
 const app = require("./src/app");
 const User = require("./src/components/user/userModel");
@@ -9,7 +9,9 @@ const server = http.createServer(app);
 const startServer = async () => {
   try {
     await User.sync();
-    server.listen(SERVER_PORT);
+    server.listen(SERVER_PORT, () => {
+      console.log("Server running on port " + SERVER_PORT);
+    });
     console.log("Connection estabilished");
   } catch (error) {
     console.log(error.message);

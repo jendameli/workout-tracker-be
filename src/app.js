@@ -12,6 +12,7 @@ const app = express();
 // Middlewares
 app.use(helmet());
 app.use(morgan("dev"));
+app.use(express.json());
 
 // Routers
 app.use("/user", userRouter);
