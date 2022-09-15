@@ -1,6 +1,5 @@
 const userService = require("./userService");
 
-// TODO: Logic
 exports.getAllUsers = async (req, res) => {
   try {
     const registeredActivatedUsers = await userService.getAllUsers();
@@ -9,10 +8,15 @@ exports.getAllUsers = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
-// TODO: Logic
+
 exports.getUserById = async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return res.status(400).json({ error: "Missing userId parameter" });
+  }
   try {
-    return await res.status(200).json({ message: "Get user by Id" });
+    const userAccount = await userService.getUserById(userId);
+    return await res.status(200).json({ data: userAccount });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

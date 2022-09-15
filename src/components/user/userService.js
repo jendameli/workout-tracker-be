@@ -43,8 +43,14 @@ exports.getAllUsers = async () => {
   });
 };
 // TODO: Logic
-exports.getUserById = async () => {
-  return;
+exports.getUserById = async (userId) => {
+  try {
+    return await User.findByPk(userId, {
+      attributes: ["userId", "firstName", "lastName", "email", "createdAt"],
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 exports.registerUser = async (userData) => {
