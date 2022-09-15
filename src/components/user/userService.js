@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const { where } = require("sequelize");
+const {
+  sendRegistrationEmail,
+} = require("../../utils/emailProvider/emailProvider");
 
 const User = require("./userModel");
 
@@ -52,11 +55,31 @@ exports.registerUser = async (userData) => {
     registrationHash: registrationLink,
   });
   try {
-    return await User.create(userRegistration);
+    await User.create(userRegistration);
+    await sendRegistrationEmail(
+      userRegistration.firstName,
+      userRegistration.email,
+      registrationLink
+    );
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
+exports.confirmUserAccount = async (registrationHash) => {
+  const userAccount = await User.findOne({ where: { registrationHash } });
+  if (!userAccount) {
+    throw new Error("No users found!");
+  }
+  try {
+    userAccount.isActivated = true;
+    userAccount.registrationHash = null;
+    await userAccount.save();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 // TODO: Logic
 exports.loginUser = async () => {
   return;

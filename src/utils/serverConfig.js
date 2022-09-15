@@ -6,4 +6,6 @@ module.exports = {
   DB_USERNAME: process.env.DB_USERNAME,
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_PORT: process.env.DB_PORT,
+  SG_API_KEY: process.env.SG_API_KEY,
+  SG_EMAIL_SENDER: process.env.SG_EMAIL_SENDER,
 };

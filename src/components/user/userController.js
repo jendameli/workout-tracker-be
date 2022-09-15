@@ -44,6 +44,17 @@ exports.registerUser = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+exports.confirmUserAccount = async (req, res) => {
+  const { registrationHash } = req.params;
+  try {
+    await userService.confirmUserAccount(registrationHash);
+    return res.status(200).json({ message: "Account activated" });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
 // TODO: Logic
 exports.loginUser = async (req, res) => {
   try {
