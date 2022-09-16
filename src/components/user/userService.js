@@ -1,49 +1,25 @@
-const bcrypt = require("bcrypt");
-const crypto = require("crypto");
+const { hashPassword, createRandomString } = require("./userHelper");
 const {
   sendRegistrationEmail,
 } = require("../../utils/emailProvider/emailProvider");
 
 const User = require("./userModel");
 
-// Helper functions
-const createRandomString = () => {
-  return crypto.randomBytes(12).toString("hex");
-};
-
-const hashPassword = (userPassword) => {
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(userPassword, salt);
-  return hashedPassword;
-};
-
-const comparePasswords = (enteredPassword) => {
-  // TODO: Logic for compare passwords, boolean
-};
-
-// Check if user provided email is type of email
-exports.checkInputEmail = (userEmail) => {
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return userEmail.match(emailRegex);
-};
-
 // Main services for user resource
 
 exports.getAllUsers = async () => {
   try {
-    return await User.findAll(
-      {
-        attributes: [
-          "userId",
-          "firstName",
-          "lastName",
-          "age",
-          "email",
-          "createdAt",
-        ],
-        where: { isActivated: true },
-      }
-    );
+    return await User.findAll({
+      attributes: [
+        "userId",
+        "firstName",
+        "lastName",
+        "age",
+        "email",
+        "createdAt",
+      ],
+      where: { isActivated: true },
+    });
   } catch (error) {
     throw new Error(error.message);
   }

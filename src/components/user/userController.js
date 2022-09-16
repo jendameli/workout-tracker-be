@@ -1,4 +1,5 @@
 const userService = require("./userService");
+const { checkInputEmail } = require("./userHelper");
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -28,7 +29,7 @@ exports.registerUser = async (req, res) => {
   const userRegistrationData = req.body;
   if (
     !userRegistrationData.email ||
-    !userService.checkInputEmail(userRegistrationData.email)
+    !checkInputEmail(userRegistrationData.email)
   ) {
     return res
       .status(400)
