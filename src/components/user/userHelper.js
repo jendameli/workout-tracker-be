@@ -11,12 +11,15 @@ exports.hashPassword = (userPassword) => {
   return hashedPassword;
 };
 
-exports.comparePasswords = (enteredPassword) => {
-  // TODO: Logic for compare passwords, boolean
-};
-
 // Check if user provided email is type of email
 exports.checkInputEmail = (userEmail) => {
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return userEmail.match(emailRegex);
+};
+
+exports.compareUserPasswords = (
+  userProvidedPassword,
+  userSavedPassword
+) => {
+  return bcrypt.compareSync(userProvidedPassword, userSavedPassword);
 };

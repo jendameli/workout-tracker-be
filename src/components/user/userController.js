@@ -1,5 +1,7 @@
 const userService = require("./userService");
 const { checkInputEmail } = require("./userHelper");
+const { createJwtToken } = require("../../utils/jwtUtility");
+const { JWT_EXPIRATION } = require("../../utils/serverConfig");
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -17,7 +19,7 @@ exports.getUserById = async (req, res) => {
     return res.status(400).json({ error: "Missing userId parameter" });
   }
   try {
-    const userAccount = await userService.getUserById(userId);
+    const userAccount = await userService.getUserById(parseInt(userId));
     return await res.status(200).json({ data: userAccount });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -62,10 +64,37 @@ exports.confirmUserAccount = async (req, res) => {
   }
 };
 
-// TODO: Logic
+// Endpoint for logging user and create auth token
 exports.loginUser = async (req, res) => {
+  const userCredentials = req.body;
   try {
-    return await res.status(200).json({ message: "Login user" });
+    const userAccount = await userService.loginUser(userCredentials);
+    const jwtToken = createJwtToken(userAccount);
+    res.cookie("jwt", jwtToken, {
+      maxAge: JWT_EXPIRATION,
+      httpOnly: true,
+    });
+    return res.status(200).json({ message: "User logged successfully" });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+// get account from logged user - if not logged redirection to login page follows up
+exports.getUserAccount = async (req, res, next) => {
+  try {
+    return res.status(200).json({ message: "User account" });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+exports.logoutUser = (req, res) => {
+  try {
+    return res
+      .clearCookie("jwt")
+      .status(200)
+      .json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

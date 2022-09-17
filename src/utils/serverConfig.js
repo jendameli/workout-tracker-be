@@ -8,4 +8,6 @@ module.exports = {
   DB_PORT: process.env.DB_PORT,
   SG_API_KEY: process.env.SG_API_KEY,
   SG_EMAIL_SENDER: process.env.SG_EMAIL_SENDER,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_EXPIRATION: process.env.JWT_EXPIRATION,
 };

@@ -1,12 +1,14 @@
-const { hashPassword, createRandomString } = require("./userHelper");
+const {
+  hashPassword,
+  createRandomString,
+  compareUserPasswords,
+} = require("./userHelper");
 const {
   sendRegistrationEmail,
 } = require("../../utils/emailProvider/emailProvider");
-
 const User = require("./userModel");
 
-// Main services for user resource
-
+// Get all activated users
 exports.getAllUsers = async () => {
   try {
     return await User.findAll({
@@ -25,6 +27,7 @@ exports.getAllUsers = async () => {
   }
 };
 
+// Get specific user by userId
 exports.getUserById = async (userId) => {
   try {
     return await User.findByPk(userId, {
@@ -35,6 +38,7 @@ exports.getUserById = async (userId) => {
   }
 };
 
+// Create new user registration and send registration email
 exports.registerUser = async (userData) => {
   const hashedPassword = hashPassword(userData.password);
   const registrationLink = createRandomString();
@@ -55,6 +59,7 @@ exports.registerUser = async (userData) => {
   }
 };
 
+// Service to change user account based upon click on activation link
 exports.confirmUserAccount = async (registrationHash) => {
   const userAccount = await User.findOne({ where: { registrationHash } });
   if (!userAccount) {
@@ -69,7 +74,21 @@ exports.confirmUserAccount = async (registrationHash) => {
   }
 };
 
-// TODO: Logic
-exports.loginUser = async () => {
-  return;
+exports.loginUser = async ({ email, password }) => {
+  const userAccount = await User.findOne({
+    where: { email },
+  });
+  if (!userAccount) {
+    throw new Error("User doesnt exists");
+  }
+  const isPasswordValid = compareUserPasswords(password, userAccount.password);
+  if (isPasswordValid) {
+    return {
+      userId: userAccount.userId,
+      firstName: userAccount.firstName,
+      lastName: userAccount.lastName,
+    };
+  }
+
+  return null;
 };
