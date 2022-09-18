@@ -15,5 +15,7 @@ userRouter.get(
   "/confirm-account/:registrationHash",
   userController.confirmUserAccount
 );
+userRouter.patch("/:userId", userController.makeUserInactive);
+userRouter.delete("/:userId", userController.deleteUser);
 
 module.exports = userRouter;

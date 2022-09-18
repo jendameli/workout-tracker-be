@@ -111,3 +111,23 @@ exports.resetUserPassword = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+exports.makeUserInactive = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    await userService.makeUserInactive(parseInt(userId));
+    return res.sendStatus(204);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    await userService.deleteUser(parseInt(userId));
+    return res.sendStatus(204);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};

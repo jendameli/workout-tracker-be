@@ -9,7 +9,7 @@ const {
 } = require("../../utils/emailProvider/emailProvider");
 const User = require("./userModel");
 
-// Get all activated users
+// Get all active and activated users
 exports.getAllUsers = async () => {
   try {
     return await User.findAll({
@@ -21,7 +21,7 @@ exports.getAllUsers = async () => {
         "email",
         "createdAt",
       ],
-      where: { isActivated: true },
+      where: { isActivated: true, isActive: true },
     });
   } catch (error) {
     throw new Error(error.message);
@@ -111,4 +111,21 @@ exports.resetUserPassword = async (email) => {
   } catch (error) {
     throw new Error(error.message);
   }
+};
+
+exports.makeUserInactive = async (userId) => {
+  const userAccount = await User.findByPk(userId);
+  if (!userAccount) {
+    throw new Error("No user found");
+  }
+  try {
+    userAccount.isActive = false;
+    userAccount.save();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+exports.deleteUser = async (userId) => {
+  await User.destroy({ where: { userId } });
 };
