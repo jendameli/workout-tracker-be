@@ -99,3 +99,15 @@ exports.logoutUser = (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+exports.resetUserPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    await userService.resetUserPassword(email);
+    return res.status(200).json({
+      message: "If this is correct email we will send you reset password",
+    });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};

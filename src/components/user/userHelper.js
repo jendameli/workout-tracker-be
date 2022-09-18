@@ -17,9 +17,10 @@ exports.checkInputEmail = (userEmail) => {
   return userEmail.match(emailRegex);
 };
 
-exports.compareUserPasswords = (
-  userProvidedPassword,
-  userSavedPassword
-) => {
+exports.compareUserPasswords = (userProvidedPassword, userSavedPassword) => {
   return bcrypt.compareSync(userProvidedPassword, userSavedPassword);
+};
+
+exports.createRandomPassword = () => {
+  return Math.random().toString(36).substring(2, 8);
 };

@@ -5,6 +5,7 @@ const {
 } = require("./userHelper");
 const {
   sendRegistrationEmail,
+  sendResetPasswordEmail,
 } = require("../../utils/emailProvider/emailProvider");
 const User = require("./userModel");
 
@@ -78,9 +79,7 @@ exports.loginUser = async ({ email, password }) => {
   const userAccount = await User.findOne({
     where: { email },
   });
-  if (!userAccount) {
-    throw new Error("User doesnt exists");
-  }
+
   const isPasswordValid = compareUserPasswords(password, userAccount.password);
   if (isPasswordValid) {
     return {
@@ -89,6 +88,27 @@ exports.loginUser = async ({ email, password }) => {
       lastName: userAccount.lastName,
     };
   }
+  if (!userAccount || !isPasswordValid) {
+    throw new Error("Wrong email or password");
+  }
+};
 
-  return null;
+exports.resetUserPassword = async (email) => {
+  const userAccount = await User.findOne({ where: { email } });
+  if (!userAccount) {
+    return;
+  }
+  try {
+    const newPassword = createRandomString();
+    const hashedPassword = hashPassword(newPassword);
+    userAccount.password = hashedPassword;
+    userAccount.save();
+    sendResetPasswordEmail(
+      userAccount.firstName,
+      userAccount.email,
+      newPassword
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
