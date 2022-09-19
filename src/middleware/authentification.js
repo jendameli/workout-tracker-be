@@ -8,7 +8,7 @@ exports.authentificate = (req, res, next) => {
       return res.status(403).json({ error: "Access denied" });
     }
     const decodedToken = jwt.verify(token, JWT_SECRET);
-    req.jwt = decodedToken;
+    req.user = decodedToken;
     next();
   } catch (error) {
     return res.status(400).json({ error: error.message || "Invalid token" });

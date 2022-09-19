@@ -129,3 +129,11 @@ exports.makeUserInactive = async (userId) => {
 exports.deleteUser = async (userId) => {
   await User.destroy({ where: { userId } });
 };
+
+exports.editUserDetails = async (userData, userId) => {
+  try {
+    await User.update(userData, { where: { userId } });
+  } catch (error) {
+    throw error;
+  }
+};

@@ -15,6 +15,11 @@ userRouter.get(
   "/confirm-account/:registrationHash",
   userController.confirmUserAccount
 );
+userRouter.patch(
+  "/user-account/edit",
+  authentificate,
+  userController.editUserDetails
+);
 userRouter.patch("/:userId", userController.makeUserInactive);
 userRouter.delete("/:userId", userController.deleteUser);
 
