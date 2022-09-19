@@ -14,7 +14,8 @@ const startServer = async () => {
     });
     console.log("Connection estabilished");
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
+    process.exit();
   }
 };
 

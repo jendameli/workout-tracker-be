@@ -1,54 +1,34 @@
-const bcrypt = require("bcrypt");
-const crypto = require("crypto");
+const {
+  hashPassword,
+  createRandomString,
+  compareUserPasswords,
+} = require("./userHelper");
 const {
   sendRegistrationEmail,
+  sendResetPasswordEmail,
 } = require("../../utils/emailProvider/emailProvider");
-
 const User = require("./userModel");
 
-// Helper functions
-const createRandomString = () => {
-  return crypto.randomBytes(12).toString("hex");
-};
-
-const hashPassword = (userPassword) => {
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(userPassword, salt);
-  return hashedPassword;
-};
-
-const comparePasswords = (enteredPassword) => {
-  // TODO: Logic for compare passwords, boolean
-};
-
-// Check if user provided email is type of email
-exports.checkInputEmail = (userEmail) => {
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return userEmail.match(emailRegex);
-};
-
-// Main services for user resource
-
+// Get all active and activated users
 exports.getAllUsers = async () => {
   try {
-    return await User.findAll(
-      {
-        attributes: [
-          "userId",
-          "firstName",
-          "lastName",
-          "age",
-          "email",
-          "createdAt",
-        ],
-        where: { isActivated: true },
-      }
-    );
+    return await User.findAll({
+      attributes: [
+        "userId",
+        "firstName",
+        "lastName",
+        "age",
+        "email",
+        "createdAt",
+      ],
+      where: { isActivated: true, isActive: true },
+    });
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
+// Get specific user by userId
 exports.getUserById = async (userId) => {
   try {
     return await User.findByPk(userId, {
@@ -59,6 +39,7 @@ exports.getUserById = async (userId) => {
   }
 };
 
+// Create new user registration and send registration email
 exports.registerUser = async (userData) => {
   const hashedPassword = hashPassword(userData.password);
   const registrationLink = createRandomString();
@@ -79,6 +60,7 @@ exports.registerUser = async (userData) => {
   }
 };
 
+// Service to change user account based upon click on activation link
 exports.confirmUserAccount = async (registrationHash) => {
   const userAccount = await User.findOne({ where: { registrationHash } });
   if (!userAccount) {
@@ -93,7 +75,65 @@ exports.confirmUserAccount = async (registrationHash) => {
   }
 };
 
-// TODO: Logic
-exports.loginUser = async () => {
-  return;
+exports.loginUser = async ({ email, password }) => {
+  const userAccount = await User.findOne({
+    where: { email },
+  });
+
+  const isPasswordValid = compareUserPasswords(password, userAccount.password);
+  if (isPasswordValid) {
+    return {
+      userId: userAccount.userId,
+      firstName: userAccount.firstName,
+      lastName: userAccount.lastName,
+    };
+  }
+  if (!userAccount || !isPasswordValid) {
+    throw new Error("Wrong email or password");
+  }
+};
+
+exports.resetUserPassword = async (email) => {
+  const userAccount = await User.findOne({ where: { email } });
+  if (!userAccount) {
+    return;
+  }
+  try {
+    const newPassword = createRandomString();
+    const hashedPassword = hashPassword(newPassword);
+    userAccount.password = hashedPassword;
+    userAccount.save();
+    sendResetPasswordEmail(
+      userAccount.firstName,
+      userAccount.email,
+      newPassword
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+exports.makeUserInactive = async (userId) => {
+  const userAccount = await User.findByPk(userId);
+  if (!userAccount) {
+    throw new Error("No user found");
+  }
+  try {
+    userAccount.isActive = false;
+    userAccount.save();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+exports.deleteUser = async (userId) => {
+  await User.destroy({ where: { userId } });
+};
+
+exports.editUserDetails = async (userData, userId) => {
+  try {
+    await User.update(userData, { where: { userId } });
+  } catch (error) {
+    throw error;
+  }
 };

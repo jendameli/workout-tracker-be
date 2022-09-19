@@ -1,5 +1,4 @@
 const { SG_EMAIL_SENDER } = require("../../serverConfig");
-console.log(SG_EMAIL_SENDER);
 
 exports.createRegistrationEmail = (firstName, email, registrationHash) => {
   return {
