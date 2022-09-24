@@ -1,14 +1,14 @@
 const http = require("http");
 
 const app = require("./src/app");
-const User = require("./src/components/user/userModel");
+const sequelize = require("./src/database/dbConnect");
 const { SERVER_PORT } = require("./src/utils/serverConfig");
 
 const server = http.createServer(app);
 
 const startServer = async () => {
   try {
-    await User.sync();
+    await sequelize.sync();
     server.listen(SERVER_PORT, () => {
       console.log("Server running on port " + SERVER_PORT);
     });
@@ -17,6 +17,7 @@ const startServer = async () => {
     console.log(error);
     process.exit();
   }
+  
 };
 
 startServer();

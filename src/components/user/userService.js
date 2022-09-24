@@ -80,6 +80,10 @@ exports.loginUser = async ({ email, password }) => {
     where: { email },
   });
 
+  if (!userAccount) {
+    throw new Error("Wrong email or password");
+  }
+
   const isPasswordValid = compareUserPasswords(password, userAccount.password);
   if (isPasswordValid) {
     return {
@@ -88,7 +92,7 @@ exports.loginUser = async ({ email, password }) => {
       lastName: userAccount.lastName,
     };
   }
-  if (!userAccount || !isPasswordValid) {
+  if (!isPasswordValid) {
     throw new Error("Wrong email or password");
   }
 };

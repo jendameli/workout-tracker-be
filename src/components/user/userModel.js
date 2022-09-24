@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/dbConnect");
+const Workout = require("../workout/workoutModel");
 
 const User = sequelize.define("User", {
   userId: {
@@ -36,5 +37,7 @@ const User = sequelize.define("User", {
     defaultValue: false,
   },
 });
+
+User.hasMany(Workout, { foreignKey: "userId" });
 
 module.exports = User;
