@@ -5,7 +5,7 @@ exports.authentificate = (req, res, next) => {
   try {
     const token = req.cookies.jwt;
     if (!token) {
-      return res.status(403).json({ error: "Access denied" });
+      return res.status(403).json({ error: "Access denied, please login" });
     }
     const decodedToken = jwt.verify(token, JWT_SECRET);
     req.user = decodedToken;

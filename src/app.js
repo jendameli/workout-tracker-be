@@ -6,7 +6,7 @@ const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const userRouter = require("./components/user/userRouter");
-const { authentificate } = require("./middleware/authentification");
+const workoutRouter = require("./components/workout/workoutRouter");
 
 // Init express app
 const app = express();
@@ -19,5 +19,6 @@ app.use(cookieParser());
 
 // Routers
 app.use("/user", userRouter);
+app.use("/workout", workoutRouter);
 
 module.exports = app;
