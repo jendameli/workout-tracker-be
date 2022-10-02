@@ -75,6 +75,7 @@ exports.confirmUserAccount = async (registrationHash) => {
   }
 };
 
+// Login user to create token to user secured routes
 exports.loginUser = async ({ email, password }) => {
   const userAccount = await User.findOne({
     where: { email },
@@ -97,6 +98,7 @@ exports.loginUser = async ({ email, password }) => {
   }
 };
 
+// Reset and send new user password according to email of account
 exports.resetUserPassword = async (email) => {
   const userAccount = await User.findOne({ where: { email } });
   if (!userAccount) {
@@ -117,6 +119,7 @@ exports.resetUserPassword = async (email) => {
   }
 };
 
+// Set user.isActive to false to deactivate account
 exports.makeUserInactive = async (userId) => {
   const userAccount = await User.findByPk(userId);
   if (!userAccount) {
@@ -130,10 +133,16 @@ exports.makeUserInactive = async (userId) => {
   }
 };
 
+// Delete user form DB
 exports.deleteUser = async (userId) => {
-  await User.destroy({ where: { userId } });
+  try {
+    await User.destroy({ where: { userId } });
+  } catch (error) {
+    throw error;
+  }
 };
 
+// Edit user details
 exports.editUserDetails = async (userData, userId) => {
   try {
     await User.update(userData, { where: { userId } });

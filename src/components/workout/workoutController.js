@@ -1,16 +1,18 @@
 const workoutService = require("./workoutService");
 
+// Get all workouts regardless who created it
 exports.getAllWorkouts = async (req, res, next) => {
   try {
     const allWorkouts = await workoutService.getAllWorkouts();
     return res
       .status(200)
-      .json({ workoutLength: allWorkouts.length, data: allWorkouts });
+      .json({ count: allWorkouts.length, data: allWorkouts });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
 };
 
+// Create a new workout - user has to be authorized
 exports.createWorkout = async (req, res) => {
   const newWorkout = req.body;
   try {
@@ -22,6 +24,7 @@ exports.createWorkout = async (req, res) => {
   }
 };
 
+// Get all workouts from specified user via foreign key userId
 exports.getWorkoutsByUserId = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -34,4 +37,16 @@ exports.getWorkoutsByUserId = async (req, res) => {
   }
 };
 
-
+// Get single workout by its PK workoutId
+exports.getWorkoutById = async (req, res) => {
+  const { workoutId } = req.params;
+  if (!workoutId) {
+    return res.status(400).json({ error: "Missing parameter workoutId" });
+  }
+  try {
+    const workout = await workoutService.getWorkoutById(workoutId);
+    return res.status(200).json({ data: workout });
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+};

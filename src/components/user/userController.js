@@ -6,7 +6,12 @@ const { JWT_EXPIRATION } = require("../../utils/serverConfig");
 exports.getAllUsers = async (req, res) => {
   try {
     const registeredActivatedUsers = await userService.getAllUsers();
-    return await res.status(200).json({ data: registeredActivatedUsers });
+    return await res
+      .status(200)
+      .json({
+        count: registeredActivatedUsers.length,
+        data: registeredActivatedUsers,
+      });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -20,7 +25,10 @@ exports.getUserById = async (req, res) => {
   }
   try {
     const userAccount = await userService.getUserById(parseInt(userId));
-    return await res.status(200).json({ data: userAccount });
+    if (!userAccount) {
+      return res.status(200).json({ message: "No user found" });
+    }
+    return await res.status(200).json({ userData: userAccount });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -91,6 +99,9 @@ exports.getUserAccount = async (req, res, next) => {
 
 exports.logoutUser = (req, res) => {
   try {
+    if (!req.cookies.jwt) {
+      return res.status(200).json({ message: "You are already logged out" });
+    }
     return res
       .clearCookie("jwt")
       .status(200)

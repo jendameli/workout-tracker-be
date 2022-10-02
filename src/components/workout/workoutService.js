@@ -20,9 +20,23 @@ exports.createWorkout = async (workoutData) => {
 exports.getWorkoutsByUserId = async (userId) => {
   try {
     return await Workout.findAll(
-      { attributes: ["workoutId", "name", "rating", "createdAt"] },
+      {
+        attributes: ["workoutId", "workoutName", "workoutRating", "createdAt"],
+      },
       { where: { userId } }
     );
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getWorkoutById = async (workoutId) => {
+  try {
+    const workout = Workout.findOne({ where: { workoutId } });
+    if (!workout) {
+      throw new Error("No workout found!");
+    }
+    return workout;
   } catch (error) {
     throw error;
   }

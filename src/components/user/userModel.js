@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/dbConnect");
+const Exercise = require("../exercise/exerciseModel");
 const Workout = require("../workout/workoutModel");
 
 const User = sequelize.define("User", {
@@ -10,20 +11,25 @@ const User = sequelize.define("User", {
   },
   firstName: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
   lastName: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
   password: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
     // Catch SequelizeUniqueConstraintError if not unique
     unique: true,
+    allowNull: false,
   },
   age: {
     type: DataTypes.INTEGER,
+    allowNull: true,
   },
   registrationHash: {
     type: DataTypes.STRING,
@@ -38,6 +44,10 @@ const User = sequelize.define("User", {
   },
 });
 
+User.hasMany(Exercise, { foreignKey: "userId" });
+Exercise.belongsTo(User, { foreignKey: "userId" });
+
 User.hasMany(Workout, { foreignKey: "userId" });
+Workout.belongsTo(User, { foreignKey: "userId" });
 
 module.exports = User;
