@@ -42,4 +42,22 @@ module.exports = {
     "weighted",
     "wheel roller",
   ],
+
+  MUSCLES: [
+    "chest",
+    "deltoid",
+    "biceps",
+    "abs",
+    "obliques",
+    "abductor",
+    "quadriceps",
+    "shin",
+    "trapezius",
+    "infraspinatuz",
+    "triceps",
+    "lats",
+    "glutes",
+    "hamstring",
+    "calves",
+  ],
 };

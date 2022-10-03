@@ -20,7 +20,7 @@ exports.createWorkout = async (req, res) => {
     await workoutService.createWorkout(newWorkout);
     return res.status(200).json({ message: "New workout created" });
   } catch (error) {
-    return res.status(400).json({ error: error });
+    return res.status(400).json({ error: error.message });
   }
 };
 

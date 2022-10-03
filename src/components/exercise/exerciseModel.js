@@ -42,7 +42,7 @@ const Exercise = sequelize.define("Exercise", {
   isExercisePublic: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: true,
+    defaultValue: false,
   },
 });
 

@@ -12,23 +12,26 @@ const Workout = sequelize.define("Workout", {
   workoutName: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   workoutRating: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   workoutStartTime: {
     type: DataTypes.TIME,
-    allowNull: false,
+    allowNull: true,
   },
   workoutEndTime: {
     type: DataTypes.TIME,
-    allowNull: false,
+    allowNull: true,
   },
   isWorkoutPublic: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+  },
+  isWorkoutActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
   isWorkoutFinished: {
     type: DataTypes.BOOLEAN,
@@ -36,7 +39,13 @@ const Workout = sequelize.define("Workout", {
   },
 });
 
-Workout.belongsToMany(Exercise, { through: WorkoutWithExercise });
-Exercise.belongsToMany(Workout, { through: WorkoutWithExercise });
+Workout.belongsToMany(Exercise, {
+  through: WorkoutWithExercise,
+  foreignKey: "workoutId",
+});
+Exercise.belongsToMany(Workout, {
+  through: WorkoutWithExercise,
+  foreignKey: "exerciseId",
+});
 
 module.exports = Workout;
