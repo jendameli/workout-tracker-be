@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/dbConnect");
 const Exercise = require("../exercise/exerciseModel");
+const ExerciseTemplate = require("../exercise/exerciseTemplateModel");
 const Workout = require("../workout/workoutModel");
 
 const User = sequelize.define("User", {
@@ -44,10 +45,8 @@ const User = sequelize.define("User", {
   },
 });
 
-User.hasMany(Exercise, { foreignKey: "userId" });
-Exercise.belongsTo(User, { foreignKey: "userId" });
-
+User.hasMany(ExerciseTemplate, { foreignKey: "userId" });
 User.hasMany(Workout, { foreignKey: "userId" });
-Workout.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Exercise, { foreignKey: "userId" });
 
 module.exports = User;

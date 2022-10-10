@@ -1,9 +1,5 @@
 const sequelize = require("../../database/dbConnect");
 
-const WorkoutWithExercise = sequelize.define(
-  "WorkoutWithExercise",
-  {},
-  { timestamps: false }
-);
+const WorkoutWithExercise = sequelize.define("WorkoutWithExercise");
 
 module.exports = WorkoutWithExercise;
