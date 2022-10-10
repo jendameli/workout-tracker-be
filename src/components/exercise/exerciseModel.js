@@ -1,5 +1,6 @@
 const sequelize = require("../../database/dbConnect");
 const { DataTypes } = require("sequelize");
+const ExerciseTemplate = require("./exerciseTemplateModel");
 
 const Exercise = sequelize.define("Exercise", {
   exerciseId: {
@@ -7,43 +8,20 @@ const Exercise = sequelize.define("Exercise", {
     primaryKey: true,
     autoIncrement: true,
   },
-  exerciseName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-
-  exerciseBodyPart: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  exerciseEquipment: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  exerciseMuscles: {
-    type: DataTypes.STRING,
-  },
-  exerciseRepeats: {
+  series: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  exerciseWeight: {
+  repeats: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  exerciseStartTime: {
-    type: DataTypes.TIME,
+  weight: {
+    type: DataTypes.INTEGER,
     allowNull: true,
-  },
-  exerciseEndTime: {
-    type: DataTypes.TIME,
-    allowNull: true,
-  },
-  isExercisePublic: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
   },
 });
+
+Exercise.hasOne(ExerciseTemplate, {foreignKey: 'exerciseId'})
 
 module.exports = Exercise;

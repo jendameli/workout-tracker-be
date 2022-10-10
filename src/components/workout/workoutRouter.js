@@ -11,5 +11,10 @@ workoutRouter.get(
   authentificate,
   workoutController.getWorkoutsByUserId
 );
+workoutRouter.delete(
+  "/:workoutId",
+  authentificate,
+  workoutController.deleteWorkout
+);
 
 module.exports = workoutRouter;

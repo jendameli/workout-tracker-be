@@ -1,3 +1,4 @@
+const Workout = require("./workoutModel");
 const workoutService = require("./workoutService");
 
 // Get all workouts regardless who created it
@@ -29,9 +30,7 @@ exports.getWorkoutsByUserId = async (req, res) => {
   const { userId } = req.params;
   try {
     const workouts = await workoutService.getWorkoutsByUserId(parseInt(userId));
-    return res
-      .status(200)
-      .json({ numberOfWorkouts: workouts.length, data: workouts });
+    return res.status(200).json({ count: workouts.length, data: workouts });
   } catch (error) {
     return res.status(400).json({ error: error });
   }
@@ -48,5 +47,17 @@ exports.getWorkoutById = async (req, res) => {
     return res.status(200).json({ data: workout });
   } catch (error) {
     return res.status(400).json({ error: error });
+  }
+};
+
+// Delete workout
+exports.deleteWorkout = async (req, res) => {
+  const { workoutId } = req.params;
+  const { userId } = req.user;
+  try {
+    await workoutService.deleteWorkout(workoutId, userId);
+    return res.sendStatus(204);
+  } catch (error) {
+    return res.status(400).json({ error: error.message || error });
   }
 };

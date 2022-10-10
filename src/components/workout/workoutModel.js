@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/dbConnect");
 const Exercise = require("../exercise/exerciseModel");
-const WorkoutWithExercise = require("./workoutWithExercises");
+const GymExercise = require("../exercise/exerciseModel");
 
 const Workout = sequelize.define("Workout", {
   workoutId: {
@@ -40,11 +40,12 @@ const Workout = sequelize.define("Workout", {
 });
 
 Workout.belongsToMany(Exercise, {
-  through: WorkoutWithExercise,
+  through: "WorkoutWithExercise",
   foreignKey: "workoutId",
 });
+
 Exercise.belongsToMany(Workout, {
-  through: WorkoutWithExercise,
+  through: "WorkoutWithExercise",
   foreignKey: "exerciseId",
 });
 

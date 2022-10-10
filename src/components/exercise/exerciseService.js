@@ -1,4 +1,4 @@
-const Exercise = require("./exerciseModel");
+const Exercise = require("./exerciseTemplateModel");
 
 const { BODY_PARTS, EQUIPMENT } = require("./exerciseHelper");
 
