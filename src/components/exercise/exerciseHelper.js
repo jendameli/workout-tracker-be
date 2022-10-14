@@ -44,7 +44,7 @@ module.exports = {
   ],
 
   MUSCLES: [
-    "chest",
+    "pecs",
     "deltoid",
     "biceps",
     "abs",
