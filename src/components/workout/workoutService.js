@@ -1,5 +1,4 @@
 const Workout = require("./workoutModel");
-const User = require("../user/userModel");
 
 exports.getAllWorkouts = async () => {
   try {
